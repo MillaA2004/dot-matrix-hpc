@@ -1,0 +1,9 @@
+*.out
+*.exe
+build/
+
+# Ignore data and results
+data/*.fasta
+data/*.fa
+data/*.txt
+*.csv
