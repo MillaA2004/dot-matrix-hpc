@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <chrono> 
+#include <omp.h> 
 
 using namespace std;
 using namespace std::chrono;
@@ -49,26 +50,36 @@ int main() {
     cout << "Length of Sequence 1: " << len1 << endl;
     cout << "Length of Sequence 2: " << len2 << endl;
 
-    // Prepare file for saving results (for visualization)
-    // IMPORTANT: For large files on supercomputers we will exclude this writing,
-    // because writing to disk slows down the process!
-    bool save_to_file = true; 
-    ofstream outFile("output.csv");
-    if (save_to_file && outFile.is_open()) {
-        outFile << "X,Y\n"; // Header of the CSV file
+    // Disabled file saving for parallel execution to prevent file corruption
+    bool save_to_file = false; 
+    ofstream outFile;
+    if (save_to_file) {
+        outFile.open("output.csv");
+        if (outFile.is_open()) outFile << "X,Y\n"; 
     }
+
+    // Print the number of threads OpenMP will use
+    int max_threads = omp_get_max_threads();
+    cout << "Starting parallel execution using up to " << max_threads << " threads..." << endl;
 
     // start timer
     auto start_time = high_resolution_clock::now();
 
     long long match_count = 0; // match count
 
-    // Dot-Matrix algorithm (O(n*m))
+    // THE MAGIC HAPPENS HERE:
+    // collapse(2) merges the two loops into one large parallel space.
+    // reduction(+:match_count) creates a safe, private copy of the counter for each thread, 
+    // and adds them all together securely at the very end.
+    #pragma omp parallel for collapse(2) reduction(+:match_count)
     for (int i = 0; i < len1; i++) {
         for (int j = 0; j < len2; j++) {
             if (seq1[i] == seq2[j]) {
                 match_count++;
+                
+                // Writing to file is skipped during parallel runs
                 if (save_to_file && outFile.is_open()) {
+                    // In a real HPC scenario, you would not do file I/O inside a parallel loop
                     outFile << i << "," << j << "\n";
                 }
             }
@@ -83,7 +94,7 @@ int main() {
 
     // results
     cout << "--------------------------------------" << endl;
-    cout << "Number of matches found: " << match_count << endl;
+    cout << "Total of matches found: " << match_count << endl;
     cout << "Execution time: " << execution_time.count() << " seconds." << endl;
     cout << "--------------------------------------" << endl;
 
