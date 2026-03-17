@@ -3,17 +3,16 @@
 ## Overview
 This project implements a High-Performance Computing (HPC) C++ application that calculates a Dot-Matrix alignment between two DNA sequences (e.g., from FASTA files). The algorithm is designed to identify regions of similarity between genomic sequences.
 
-To handle massive datasets (50,000+ base pairs) efficiently, the core alignment algorithm has been heavily optimized and parallelized using **OpenMP**. The application also includes an automated benchmarking system to compare the execution time of the sequential (serial) algorithm against the parallelized version.
+To handle massive datasets (50,000+ base pairs) efficiently, the core alignment algorithm has been heavily optimized and parallelized using **OpenMP**. The application features an interactive console menu and an automated benchmarking system to compare the execution time of the sequential (serial) algorithm against the parallelized version.
 
 ## Project Structure
 ```text
 dot-matrix-hpc/
 ├── data/                      # Directory for input FASTA files (ignored by Git)
-│   └── small-debug/
-│       ├── influenza_A_1.fasta
-│       └── influenza_A_2.fasta
+│   ├── small-debug/           # ~1.7k bp sequences (Influenza A)
+│   └── large-hpc/             # ~48k bp sequences for stress-testing
 ├── src/                       # Source code directory
-│   ├── main.cpp               # Driver program (I/O, benchmarking, execution)
+│   ├── main.cpp               # Driver program (Menu, I/O, benchmarking)
 │   ├── algorithms.h           # Function declarations and data structures
 │   └── algorithms.cpp         # Core mathematical logic (Serial and Parallel)
 ├── plot.py                    # Python script to visualize the output.csv
@@ -29,17 +28,26 @@ Python 3 (Optional): Required only if you want to generate the 2D visual scatter
 Install the plotting library via terminal: pip install matplotlib
 
 How to Compile and Run
-Open your terminal in the root directory of the project (dot-matrix-hpc) and execute the following command:
+Open your terminal in the root directory of the project (dot-matrix-hpc) and execute the following compilation command:
 
 Windows (PowerShell):
 
 PowerShell
 g++ src/main.cpp src/algorithms.cpp -o main -fopenmp -O3 ; .\main.exe
-Linux / macOS:
+Linux / macOS (Bash):
 
 Bash
 g++ src/main.cpp src/algorithms.cpp -o main -fopenmp -O3
 ./main
+Interactive Execution Modes
+Upon running the executable, the program will prompt you to select a dataset size. Type one of the following commands and press Enter:
+
+test: Runs a rapid 10x10 hardcoded string comparison to verify basic compiler logic.
+
+small: Loads ~1,700 bp sequences. This mode processes roughly 3 million comparisons and successfully generates the output.csv file required for Python visualization.
+
+large: Loads ~48,000 bp sequences. This mode computes nearly 1.9 billion comparisons to stress-test the CPU and demonstrate true parallel scaling. (Note: CSV file generation is safely disabled in this mode to prevent severe I/O bottlenecks and memory crashes).
+
 Parallel Optimizations Implemented
 The algorithms.cpp file contains highly optimized parallel logic designed for deployment on supercomputing clusters. Key optimizations include:
 
@@ -56,12 +64,12 @@ Static Scheduling (schedule(static)): Pre-divides the uniform matrix workload in
 Compiler Optimization (-O3): Aggressive hardware-level optimization applied during the build process.
 
 Interpreting the Benchmark Results
-When running the program on small-to-medium datasets (e.g., 1,700 bp Influenza sequences), the Serial execution may appear faster than the Parallel execution when compiled with -O3.
+Small Datasets (Parallel Overhead): When running the small dataset, the Serial execution may appear faster than the Parallel execution. The -O3 flag makes the mathematical operations nearly instantaneous, meaning the program spends comparatively more time waking up and assigning OpenMP threads than it does calculating matches.
 
-This is expected behavior in HPC known as Parallel Overhead. The -O3 flag makes the mathematical operations nearly instantaneous (sub-millisecond), meaning the program spends comparatively more time waking up and assigning OpenMP threads than it does calculating matches. As the dataset scales up to 50,000+ characters (yielding billions of comparisons), the computation time will drastically outpace the thread overhead, and the parallel architecture will demonstrate massive speedups.
+Large Datasets (True HPC Scaling): When running the large dataset (1.9+ billion operations), the computation time drastically outpaces the thread overhead. On standard local hardware, the parallel architecture demonstrates a 6.7x speedup, dropping execution time from 1.29 seconds down to 0.19 seconds.
 
 Generating the Dot-Matrix Graph
-If the application successfully generates an output.csv file, you can visualize the DNA alignment by running the included Python script from the root directory:
+Run the application using the small mode to safely generate the coordinate data. Once the output.csv file is created, you can visualize the DNA alignment by running the Python script from the root directory:
 
 PowerShell
 python plot.py
