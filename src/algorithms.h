@@ -16,4 +16,5 @@ MatchResult runSerialDotMatrix(const std::string& s1, const std::string& s2);
 // Parallel (OpenMP) version
 MatchResult runParallelDotMatrix(const std::string& s1, const std::string& s2);
 
+void generateCSV(const std::string& s1, const std::string& s2, const std::string& filename);
 #endif

@@ -1,8 +1,10 @@
-*.out
+main.exe
 *.exe
-build/
+*.out
+output.csv
 
 # Ignore data and results
+src/data/
 data/*.fasta
 data/*.fa
 data/*.txt

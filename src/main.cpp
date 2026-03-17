@@ -28,8 +28,8 @@ string readFASTA(const string& filename) {
 
 int main() {
     //paths to FASTA files
-    string file1 = "../data/seq1.fasta";
-    string file2 = "../data/seq2.fasta";
+    string file1 = "src/data/small-debug/influenza_A_1.fasta";
+    string file2 = "src/data/small-debug/influenza_A_2.fasta";
     
     cout << "DNA Dot-Matrix Performance Comparison" << endl;
     
@@ -76,5 +76,10 @@ int main() {
 
     cout << "================================================" << endl;
 
+    if (seq1.length() < 5000) {
+        cout << "Generating output.csv for Python visualization..." << endl;
+        generateCSV(seq1, seq2, "output.csv");
+        cout << "Done! Saved as output.csv" << endl;
+    }
     return 0;
 }
