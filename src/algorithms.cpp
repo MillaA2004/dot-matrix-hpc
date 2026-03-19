@@ -25,10 +25,17 @@ MatchResult runParallelDotMatrix(const string& s1, const string& s2) {
     auto start = high_resolution_clock::now();
     long long matches = 0;
 
-    #pragma omp parallel for collapse(2) reduction(+:matches)
-    for (int i = 0; i < s1.length(); i++) {
-        for (int j = 0; j < s2.length(); j++) {
-            if (s1[i] == s2[j]) matches++;
+    // Cache the lengths in local variables
+    int len1 = s1.length();
+    int len2 = s2.length();
+
+    // Added 'simd' and 'schedule(static)'
+    #pragma omp parallel for simd collapse(2) reduction(+:matches) schedule(static)
+    for (int i = 0; i < len1; i++) {
+        for (int j = 0; j < len2; j++) {
+            if (s1[i] == s2[j]) {
+                matches++;
+            }
         }
     }
 

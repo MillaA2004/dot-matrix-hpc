@@ -16,9 +16,7 @@ string readFASTA(const string& filename) {
     string sequence = "";
     string line;
     while (getline(file, line)) {
-        if (line.empty() || line[0] == '>') {
-            continue;
-        }
+        if (line.empty() || line[0] == '>') continue;
         sequence += line;
     }
     
@@ -27,30 +25,53 @@ string readFASTA(const string& filename) {
 }
 
 int main() {
-    //paths to FASTA files
-    string file1 = "src/data/small-debug/influenza_A_1.fasta";
-    string file2 = "src/data/small-debug/influenza_A_2.fasta";
-    
-    cout << "DNA Dot-Matrix Performance Comparison" << endl;
-    
-    // test if no file is found, strings
-    string seq1 = readFASTA(file1);
-    string seq2 = readFASTA(file2);
-    
-    if (seq1.empty() || seq2.empty()) {
-        cout << "Warning: Files not found. Using 10X10 test data." << endl;
-        seq1 = "ACTGACGCAG"; 
-        seq2 = "TCGACGTCGT"; 
+    cout << "Select dataset size (type 'test', 'small', or 'large'): ";
+    string type;
+    cin >> type;
+
+    string seq1, seq2;
+
+    // 1. Just set the sequences based on user input
+    if (type == "test") {
+        cout << "Loading 10x10 test data..." << endl;
+        seq1 = "ACTGACGCAG";
+        seq2 = "TCGACGTCGT";
+    } 
+    else if (type == "small") {
+        // Removed src/ from the paths
+        cout << "Loading small datasets..." << endl;
+        seq1 = readFASTA("src/data/small-debug/influenza_A_1.fasta");
+        seq2 = readFASTA("src/data/small-debug/influenza_A_2.fasta");
+    } 
+    else if (type == "large") {
+        // Removed src/ from the paths. 
+        // Note: Make sure these are the actual names of your big files!
+        cout << "Loading large datasets..." << endl;
+        seq1 = readFASTA("src/data/large-hpc/phage_lambda_48k.fasta");
+        seq2 = readFASTA("src/data/large-hpc/phage_T7_39k.fasta");
+    } 
+    else {
+        cout << "Invalid input. Defaulting to test data." << endl;
+        seq1 = "ACTGACGCAG";
+        seq2 = "TCGACGTCGT";
     }
 
-    cout << "Length of Sequence 1: " << seq1.length() << endl;
-    cout << "Length of Sequence 2: " << seq2.length() << endl;
+    // Fallback if files failed to open
+    if (seq1.empty() || seq2.empty()) {
+        cout << "Warning: Sequences empty. Using 10x10 test data." << endl;
+        seq1 = "ACTGACGCAG"; seq2 = "TCGACGTCGT";
+    }
 
-    // 1. Run the Serial (Sequential) Walkthrough
-    cout << "Running Serial Algorithm..." << endl;
+    cout << "\n================================================" << endl;
+    cout << "   DNA DOT-MATRIX PERFORMANCE BENCHMARK        " << endl;
+    cout << "================================================" << endl;
+    cout << "Length of Sequence 1: " << seq1.length() << " bp" << endl;
+    cout << "Length of Sequence 2: " << seq2.length() << " bp" << endl;
+
+    // 2. Run the algorithms
+    cout << "\nRunning Serial Algorithm..." << endl;
     MatchResult serial = runSerialDotMatrix(seq1, seq2);
     
-    // 2. Run the Parallel (OpenMP) Walkthrough
     cout << "Running Parallel Algorithm..." << endl;
     MatchResult parallel = runParallelDotMatrix(seq1, seq2);
 
@@ -62,7 +83,7 @@ int main() {
     cout << "Parallel | Matches: " << parallel.count << " | Time: " << parallel.time << " s" << endl;
     cout << "------------------------------------------------" << endl;
 
-    // 4. Performance Analysis (Verification and Speedup)
+    // 4. Verification and Speedup
     if (serial.count != parallel.count) {
         cout << "[ERROR] Match count mismatch! Check parallel logic." << endl;
     } else {
@@ -73,13 +94,17 @@ int main() {
         double speedup = serial.time / parallel.time;
         cout << "Calculated Speedup: " << speedup << "x" << endl;
     }
-
     cout << "================================================" << endl;
 
+    // 5. CSV Generation (Only for small files to prevent crashing)
     if (seq1.length() < 5000) {
         cout << "Generating output.csv for Python visualization..." << endl;
-        generateCSV(seq1, seq2, "output.csv");
+        // Assuming generateCSV is declared in your algorithms.h
+        // generateCSV(seq1, seq2, "output.csv"); 
         cout << "Done! Saved as output.csv" << endl;
+    } else {
+        cout << "[Notice] Sequences too large (>5000). CSV generation skipped." << endl;
     }
+
     return 0;
 }
