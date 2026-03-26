@@ -40,9 +40,13 @@ MatchResult runParallelDotMatrix(const string& s1, const string& s2) {
     long long matches = 0;
     long long mismatches = 0;
 
-    #pragma omp parallel for collapse(2) reduction(+:matches, mismatches)
-    for (int i = 0; i < s1.length(); i++) {
-        for (int j = 0; j < s2.length(); j++) {
+// Cache the lengths in local variables
+    int len1 = s1.length();
+    int len2 = s2.length();
+
+    #pragma omp parallel for simd collapse(2) reduction(+:matches, mismatches) schedule(static)
+    for (int i = 0; i < len1; i++) {
+        for (int j = 0; j < len2; j++) {
             if (s1[i] == s2[j]) {
                 matches++;
             } else {
@@ -50,6 +54,7 @@ MatchResult runParallelDotMatrix(const string& s1, const string& s2) {
             }
         }
     }
+  
     long long gaps = abs((long long)s1.length() - (long long)s2.length());
     long long score = (matches * MATCH_SCORE) + (mismatches * MISMATCH_PENALTY) + (gaps * GAP_PENALTY);
 
