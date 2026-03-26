@@ -6,7 +6,10 @@
 
 // Structure to hold results for easier analysis
 struct MatchResult {
-    long long count;
+    long long matches;
+    long long mismatches;
+    long long gaps;
+    long long score;
     double time;
 };
 
