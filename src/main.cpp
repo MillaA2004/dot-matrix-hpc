@@ -78,16 +78,16 @@ int main() {
     // 3. Display Results
     cout << fixed << setprecision(6); 
     cout << "------------------------------------------------" << endl;
-    cout << "RESULTS:" << endl;
-    cout << "Serial   | Matches: " << serial.count << " | Time: " << serial.time << " s" << endl;
-    cout << "Parallel | Matches: " << parallel.count << " | Time: " << parallel.time << " s" << endl;
+    cout << "RESULTS (Math Formula Output):" << endl;
+    cout << "Serial   | Matches: " << serial.matches << " | Mismatches: " << serial.mismatches << " | Gaps: " << serial.gaps << " | SCORE: " << serial.score << " | Time: " << serial.time << " s" << endl;
+    cout << "Parallel | Matches: " << parallel.matches << " | Mismatches: " << parallel.mismatches << " | Gaps: " << parallel.gaps << " | SCORE: " << parallel.score << " | Time: " << parallel.time << " s" << endl;
     cout << "------------------------------------------------" << endl;
 
-    // 4. Verification and Speedup
-    if (serial.count != parallel.count) {
-        cout << "[ERROR] Match count mismatch! Check parallel logic." << endl;
+    // 4. Performance Analysis (Verification and Speedup)
+    if (serial.score != parallel.score) {
+        cout << "[ERROR] Score mismatch! Check parallel logic." << endl;
     } else {
-        cout << "[Verified] Results are consistent." << endl;
+        cout << "[Verified] Results are mathematically consistent." << endl;
     }
 
     if (parallel.time > 0) {
@@ -99,9 +99,8 @@ int main() {
     // 5. CSV Generation (Only for small files to prevent crashing)
     if (seq1.length() < 5000) {
         cout << "Generating output.csv for Python visualization..." << endl;
-        // Assuming generateCSV is declared in your algorithms.h
-        // generateCSV(seq1, seq2, "output.csv"); 
-        cout << "Done! Saved as output.csv" << endl;
+        generateCSV(seq1, seq2, "output.csv");
+        cout << "Done! Saved as output.csv with Types and Scores." << endl;
     } else {
         cout << "[Notice] Sequences too large (>5000). CSV generation skipped." << endl;
     }
