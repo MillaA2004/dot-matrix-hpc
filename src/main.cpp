@@ -31,21 +31,18 @@ int main() {
 
     string seq1, seq2;
 
-    // 1. Just set the sequences based on user input
+    // 1. Set the sequences based on user input
     if (type == "test") {
-        cout << "Loading 10x10 test data..." << endl;
-        seq1 = "ACTGACGCAG";
-        seq2 = "TCGACGTCGT";
+        cout << "Loading 20x20 test data..." << endl;
+        seq1 = "CCTAGATCGATCGACTAAGC";
+        seq2 = "GGTTGATCGTTCGACTTCGG";
     } 
     else if (type == "small") {
-        // Removed src/ from the paths
         cout << "Loading small datasets..." << endl;
         seq1 = readFASTA("src/data/small-debug/influenza_A_1.fasta");
         seq2 = readFASTA("src/data/small-debug/influenza_A_2.fasta");
     } 
     else if (type == "large") {
-        // Removed src/ from the paths. 
-        // Note: Make sure these are the actual names of your big files!
         cout << "Loading large datasets..." << endl;
         seq1 = readFASTA("src/data/large-hpc/phage_lambda_48k.fasta");
         seq2 = readFASTA("src/data/large-hpc/phage_T7_39k.fasta");
@@ -79,15 +76,15 @@ int main() {
     cout << fixed << setprecision(6); 
     cout << "------------------------------------------------" << endl;
     cout << "RESULTS:" << endl;
-    cout << "Serial   | Matches: " << serial.count << " | Time: " << serial.time << " s" << endl;
-    cout << "Parallel | Matches: " << parallel.count << " | Time: " << parallel.time << " s" << endl;
+    cout << "Serial   | Significant Matches: " << serial.count << " | Time: " << serial.time << " s" << endl;
+    cout << "Parallel | Significant Matches: " << parallel.count << " | Time: " << parallel.time << " s" << endl;
     cout << "------------------------------------------------" << endl;
 
     // 4. Verification and Speedup
     if (serial.count != parallel.count) {
         cout << "[ERROR] Match count mismatch! Check parallel logic." << endl;
     } else {
-        cout << "[Verified] Results are consistent." << endl;
+        cout << "[Verified] Results are completely consistent." << endl;
     }
 
     if (parallel.time > 0) {
@@ -96,11 +93,10 @@ int main() {
     }
     cout << "================================================" << endl;
 
-    // 5. CSV Generation (Only for small files to prevent crashing)
+    // 5. CSV Generation
     if (seq1.length() < 5000) {
         cout << "Generating output.csv for Python visualization..." << endl;
-        // Assuming generateCSV is declared in your algorithms.h
-        // generateCSV(seq1, seq2, "output.csv"); 
+        generateCSV(seq1, seq2, "src/output.csv"); 
         cout << "Done! Saved as output.csv" << endl;
     } else {
         cout << "[Notice] Sequences too large (>5000). CSV generation skipped." << endl;
