@@ -37,6 +37,11 @@ int main() {
         seq1 = "CCTAGATCGATCGACTAAGC";
         seq2 = "GGTTGATCGTTCGACTTCGG";
     } 
+    else if(type == "diff"){
+        cout<< "Loading different sequences for testing..." << endl;
+        seq1 = readFASTA("src/data/diff-debug/p53_human.fasta");
+        seq2 = readFASTA("src/data/diff-debug/p53_mouse.fasta");
+    }
     else if (type == "small") {
         cout << "Loading small datasets..." << endl;
         seq1 = readFASTA("src/data/small-debug/influenza_A_1.fasta");
