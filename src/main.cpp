@@ -25,7 +25,7 @@ string readFASTA(const string& filename) {
 }
 
 int main() {
-    cout << "Select dataset size (type 'test', 'small', or 'large'): ";
+    cout << "Select dataset size (type 'test', 'diff', 'small', or 'large'): ";
     string type;
     cin >> type;
 
