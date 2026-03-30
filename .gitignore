@@ -1,11 +1,11 @@
-main.exe
+# Екзекутируеми файлове (програми)
 *.exe
 *.out
-output.csv
 
-# Ignore data and results
-src/data/
-data/*.fasta
-data/*.fa
-data/*.txt
+# Генерирани резултати
 *.csv
+
+# Бази данни (FASTA файлове навсякъде из подпапките)
+**/*.fasta
+**/*.fa
+**/*.txt
