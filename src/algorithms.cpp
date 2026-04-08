@@ -17,7 +17,6 @@ MatchResult runSerialDotMatrix(const string& s1, const string& s2) {
     int len1 = s1.length() - WINDOW_SIZE;
     int len2 = s2.length() - WINDOW_SIZE;
 
-    // Standard serial loop (No OpenMP pragma)
     for (int i = 0; i <= len1; i++) {
         for (int j = 0; j <= len2; j++) {
             

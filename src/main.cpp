@@ -58,9 +58,7 @@ int main() {
             seq2 = readFASTA("src/data/small-debug-p53-genes/p53_mouse.fasta");
             break;
         case 4:
-            // Добавих тази опция, защото виждам, че имаш такава папка на снимката!
             cout << "\nLoading evolutionary dataset (Swine Flu)..." << endl;
-            // Тук предполагам имената на файловете, ако са различни, просто ги коригирай
             seq1 = readFASTA("src/data/small-debug-swine-flu/swine_flu_human.fasta"); 
             seq2 = readFASTA("src/data/small-debug-swine-flu/swine_flu_pig.fasta");
             break;
@@ -74,9 +72,7 @@ int main() {
             seq1 = "ACTGACGCAG";
             seq2 = "TCGACGTCGT";
             break;
-    }
 
-    // Защита: Ако файловете липсват, ползваме тестовите данни
     if (seq1.empty() || seq2.empty()) {
         cout << "Warning: Sequences empty or files not found. Using 10x10 test data." << endl;
         seq1 = "ACTGACGCAG"; seq2 = "TCGACGTCGT";
@@ -86,14 +82,12 @@ int main() {
     cout << "Length of Sequence 1: " << seq1.length() << " bp" << endl;
     cout << "Length of Sequence 2: " << seq2.length() << " bp" << endl;
 
-    // 2. Run the algorithms
     cout << "\nRunning Serial Algorithm..." << endl;
     MatchResult serial = runSerialDotMatrix(seq1, seq2);
     
     cout << "Running Parallel Algorithm..." << endl;
     MatchResult parallel = runParallelDotMatrix(seq1, seq2);
 
-    // 3. Display Results
     cout << fixed << setprecision(6); 
     cout << "------------------------------------------------" << endl;
     cout << "RESULTS:" << endl;
@@ -101,7 +95,6 @@ int main() {
     cout << "Parallel | Significant Matches: " << parallel.count << " | Time: " << parallel.time << " s" << endl;
     cout << "------------------------------------------------" << endl;
 
-    // 4. Verification and Speedup
     if (serial.count != parallel.count) {
         cout << "[ERROR] Match count mismatch! Check parallel logic." << endl;
     } else {
@@ -114,7 +107,6 @@ int main() {
     }
     cout << "================================================" << endl;
 
-    // 5. CSV Generation
     if (seq1.length() < 5000) {
         cout << "Generating output.csv for Python visualization..." << endl;
         generateCSV(seq1, seq2, "output.csv"); 
