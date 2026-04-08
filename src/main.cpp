@@ -72,10 +72,12 @@ int main() {
             seq1 = "ACTGACGCAG";
             seq2 = "TCGACGTCGT";
             break;
+    }
 
     if (seq1.empty() || seq2.empty()) {
         cout << "Warning: Sequences empty or files not found. Using 10x10 test data." << endl;
-        seq1 = "ACTGACGCAG"; seq2 = "TCGACGTCGT";
+        seq1 = "CCTAGATCGATCGACTAAGC";
+        seq2 = "GGTTGATCGTTCGACTTCGG";
     }
 
     cout << "\n================================================" << endl;
@@ -109,7 +111,7 @@ int main() {
 
     if (seq1.length() < 5000) {
         cout << "Generating output.csv for Python visualization..." << endl;
-        generateCSV(seq1, seq2, "output.csv"); 
+        generateCSV(seq1, seq2, "src/output.csv"); 
         cout << "Done! Saved as output.csv" << endl;
     } else {
         cout << "[Notice] Sequences too large (>5000). CSV generation skipped." << endl;
