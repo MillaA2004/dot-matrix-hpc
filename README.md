@@ -20,7 +20,7 @@ dot-matrix-hpc/
 │       ├── small-debug-p53-genes/     # ~2.5k bp sequences (Human vs Mouse p53)
 │       └── small-debug-swine-flu/     # ~1.7k bp sequences (Human vs Swine H1N1)
 ├── .gitignore                 # Excludes binaries, output.csv, and large FASTA datasets
-├── plot.py                    # Python script to visualize the output.csv
+├── Dot_matrix_hpc.ipynb       # Colab/Python script to visualize the output.csv
 └── README.md                  # Project documentation
 ```
 ## ⚙️ Prerequisites
@@ -51,8 +51,4 @@ Upon running the executable, the program presents a `switch-case` menu. Select t
 5. **Bacteriophages (HPC Mode):** Loads massive ~48,000 bp sequences. Computes nearly 2 billion comparisons to stress-test the CPU and demonstrate true parallel scaling (CSV output is disabled here to prevent memory crashes).
 
 ## 📈 Generating the Dot-Matrix Graph
-Run the application using options **2, 3, or 4** to generate the coordinate data (`output.csv`). Once created, visualize the DNA alignment by running the Python script:
-
-```bash
-python plot.py
-```
+Run the application using options **2, 3, or 4** to generate the coordinate data (`output.csv`). Once created, visualize the DNA alignment by running the .ipynb file in the Colab environment
