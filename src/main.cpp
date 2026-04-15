@@ -68,14 +68,14 @@ int main() {
             seq2 = readFASTA("src/data/large-hpc/phage_T7_39k.fasta");
             break;
         default:
-            cout << "\nInvalid input. Defaulting to 10x10 test data." << endl;
-            seq1 = "ACTGACGCAG";
-            seq2 = "TCGACGTCGT";
+            cout << "\nInvalid input. Defaulting to 20x20 test data." << endl;
+            seq1 = "CCTAGATCGATCGACTAAGC";
+            seq2 = "GGTTGATCGTTCGACTTCGG";
             break;
     }
 
     if (seq1.empty() || seq2.empty()) {
-        cout << "Warning: Sequences empty or files not found. Using 10x10 test data." << endl;
+        cout << "Warning: Sequences empty or files not found. Using 20x20 test data." << endl;
         seq1 = "CCTAGATCGATCGACTAAGC";
         seq2 = "GGTTGATCGTTCGACTTCGG";
     }
